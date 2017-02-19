@@ -1,0 +1,14 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %X{correlation_id:-empty} %X{user_id:-nouser} %X{backend_process:-unknow} %X{request_id:-?} %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <!--<appender-ref ref="FILE"/>-->
+    </root>
+    <logger name="com.impaqgroup.training.reactive" level="DEBUG"/>
+	<logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG"/>
+</configuration>
