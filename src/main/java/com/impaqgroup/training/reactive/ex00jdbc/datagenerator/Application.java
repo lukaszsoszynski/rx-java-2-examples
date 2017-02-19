@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class Application {
 
-    private final static int NUMBER_OF_RECORDS_TO_GENERATE = 500_000;
+    private final static int NUMBER_OF_RECORDS_TO_GENERATE = 1_000_000;
     public static final int BATCH_SIZE = 100;
 
     public static void main(String[] args){

@@ -21,7 +21,7 @@ public class BillingService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<BillingRecord> findBillingRecords() {
         log.info("Loading all billing data");
         return jdbcTemplate.query(SQL_QUERY, new BeanPropertyRowMapper<>(BillingRecord.class));

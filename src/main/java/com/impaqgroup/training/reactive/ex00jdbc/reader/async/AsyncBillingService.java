@@ -53,6 +53,9 @@ public class AsyncBillingService {
 
     private PreparedStatementCreator preparedStatementCreator(){
         return connection -> {
+            //in another thread. @Transactional is pointless so let set transaction to readonly
+            connection.setAutoCommit(false);
+            connection.setReadOnly(true);
             PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
             preparedStatement.setFetchSize(100);
             log.info("Prepared statement created: {}", preparedStatement);
