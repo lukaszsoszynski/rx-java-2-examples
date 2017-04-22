@@ -16,7 +16,7 @@ public class Application {
     private final static int NUMBER_OF_RECORDS_TO_GENERATE = 1_000_000;
     public static final int BATCH_SIZE = 100;
 
-    public static void main(String[] args){
+    public /*static*/ void main(String[] args){
         ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class, args);
         DataGeneratorService dataGeneratorService = applicationContext.getBean(DataGeneratorService.class);
         IntStream
