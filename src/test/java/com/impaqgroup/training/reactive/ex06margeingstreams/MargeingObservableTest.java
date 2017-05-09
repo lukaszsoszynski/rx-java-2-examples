@@ -44,6 +44,7 @@ public class MargeingObservableTest {
 
     @Test
     public void karaokeObservableTest(){
+        //demonstrate how to work karaoke Observable which will be used later
         Observable<String> karaokeObservable = karaokeObservable(LYRICS_AEROSMITH);
         karaokeObservable.subscribe(log::info);
         karaokeObservable.toList().blockingGet();

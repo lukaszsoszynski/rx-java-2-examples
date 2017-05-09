@@ -261,7 +261,8 @@ public class SchedulerTest {
                 15,//<-- do not create more then 15 threads
                 30, TimeUnit.SECONDS,//<-- release thread after 30s if there is not task for it
                 new LinkedBlockingQueue<>(15),//<-- if no thread available submit no more then 15 task in non blocking fashion
-                new ThreadFactoryLoggableWrapper(threadFactory));//<-- log thread creation
+                new ThreadFactoryLoggableWrapper(threadFactory),//<-- log thread creation
+                new ThreadPoolExecutor.CallerRunsPolicy());
         /*@formatter:on*/
         Scheduler goodScheduler = Schedulers.from(executorService);//here is good scheduler<--
 

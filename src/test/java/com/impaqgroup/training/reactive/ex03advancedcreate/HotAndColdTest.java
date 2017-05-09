@@ -16,9 +16,9 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observables.ConnectableObservable;
 import lombok.SneakyThrows;
 
-public class AdvancedCreateTest {
+public class HotAndColdTest {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(AdvancedCreateTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(HotAndColdTest.class);
 
     private AtomicInteger atomicInteger;
 

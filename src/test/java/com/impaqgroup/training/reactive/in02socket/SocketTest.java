@@ -1,4 +1,4 @@
-package com.impaqgroup.training.reactive.in00socket;
+package com.impaqgroup.training.reactive.in02socket;
 
 import java.io.*;
 import java.net.*;
