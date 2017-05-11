@@ -12,7 +12,7 @@ import com.impaqgroup.training.reactive.ex04flatmap.support.User;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FlatMapOptionalTest {
+public class Ex01FlatMapOptionalTest {
 
     public static final long USER_ID = 12643L;
     private OptionalService optionalService;
@@ -27,9 +27,9 @@ public class FlatMapOptionalTest {
 
     @Test
     public void simpleMapWithNullableService(){
-        //TASK get price of phone call using service
+        //TASK get price of phone call to the user, using service
         Optional<BigDecimal> price = Optional
-                .ofNullable(service.findUser(USER_ID))
+                .ofNullable(service.findUser(USER_ID))//<-- ugly ofNullable invocation
                 .map(service::findPhoneNumber)
                 .map(service::getPricePerMinuteForNumber);
 

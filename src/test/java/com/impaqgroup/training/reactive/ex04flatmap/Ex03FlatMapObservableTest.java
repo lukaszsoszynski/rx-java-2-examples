@@ -14,7 +14,7 @@ import io.reactivex.Observable;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FlatMapObservableTest {
+public class Ex03FlatMapObservableTest {
 
     private static final Long DEPARTMENT_ID = 4342L;
     private CostReactiveService costService;
@@ -32,7 +32,7 @@ public class FlatMapObservableTest {
     public void onlyWithMap(){
         Observable<Observable<PhoneNumber>> usersPhonesNumbers = costService
                 .findUserInDepartment(DEPARTMENT_ID)
-                .map(costService::findPhoneNumber);
+                .map(costService::findPhoneNumber);//<-- returns observable
 
         //Strange type here :o
         Observable<Observable<BigDecimal>> priceStream = usersPhonesNumbers
@@ -57,29 +57,28 @@ public class FlatMapObservableTest {
     @Test
     public void extendedFlatMapFallback(){
         Observable<String> error = Observable.error(new IllegalStateException("Something went wrong..."));
-        Observable<String> fallback = Observable.just("One", "Two");
+        Observable<String> fallback = Observable.just("Fallback One", "Fallback Two");
         Observable<String> afterComplete = Observable.just("Three");
 
         error
-                .flatMap(event -> Observable.just(event), exception -> fallback, () -> afterComplete)
+                .flatMap(event -> Observable.just(event), exception -> fallback, () -> afterComplete)//<-- flat map for error is only executed
                 .subscribe(log::info, ex -> log.info("Got error", ex), () -> log.info("On complete"));
         //three is not display because error mapping occurred
     }
 
     @Test
     public void extendedFlatMapOnComplete(){
-        Observable<String> error = Observable.just("One");
-        Observable<String> fallback = Observable.just("Two");
-        Observable<String> afterComplete = Observable.just("Three");
+        Observable<String> observable = Observable.just("One");
+        Observable<String> fallback = Observable.just("Fallback Two");
+        Observable<String> afterComplete = Observable.just("After complete Three");
 
-        error
-                .flatMap(event -> Observable.just(event), exception -> fallback, () -> afterComplete)
+        observable
+                .flatMap(event -> Observable.just("Extended " + event), exception -> fallback, () -> afterComplete)//flat map for event and on complete is executed
                 .subscribe(log::info, ex -> log.info("Got error", ex), () -> log.info("On complete"));
         //"Two" is not display because onComplete mapping occurred
     }
 
     @Test
-    @Ignore
     public void flatMapIsConcurrentByDefault(){
         Observable<BigDecimal> pricePerSms = costService.findUserInDepartment(DEPARTMENT_ID)// get 3 users
                 //flat map subscribe to all Observable returned from slowFindPhoneNumber simultaneous!

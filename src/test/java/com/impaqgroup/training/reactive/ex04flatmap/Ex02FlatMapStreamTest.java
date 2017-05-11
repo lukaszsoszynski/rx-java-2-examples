@@ -14,7 +14,7 @@ import com.impaqgroup.training.reactive.ex04flatmap.support.User;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FlatMapStreamTest {
+public class Ex02FlatMapStreamTest {
 
     public static final long DEPARTMENT_ID = 23321L;
     private CostService costService;
@@ -32,7 +32,7 @@ public class FlatMapStreamTest {
     public void onlyWithMap(){
         Stream<Stream<PhoneNumber>> usersPhonesNumbers = costService
                 .findUserInDepartment(DEPARTMENT_ID)
-                .map(costService::findPhoneNumber);
+                .map(costService::findPhoneNumber);//<-- this return stream
 
         //Strange type here :o
         Stream<Stream<BigDecimal>> priceStream = usersPhonesNumbers
@@ -67,7 +67,7 @@ class CostService{
                 .build();
     }
 
-
+    //people can have many cell phones
     public Stream<PhoneNumber> findPhoneNumber(User user){
         return Stream.<PhoneNumber>builder()
                 .add(new PhoneNumber(user.getId() * 3 + 2, "mobile", String.format("%d", 800000000L + user.getId())))

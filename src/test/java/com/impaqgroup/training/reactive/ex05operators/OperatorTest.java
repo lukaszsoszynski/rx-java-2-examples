@@ -30,9 +30,9 @@ public class OperatorTest {
     @Test
     public void shouldFilterNumbers(){
         Observable
-                .fromIterable(NaturalNumbers::new)
+                .fromIterable(NaturalNumbers::new)//<-- show NaturalNumbers iterator definition
                 .filter(number -> (number % 2) == 0)
-                .take(10)
+                .take(10)//<-- move it up and see what happen
                 .subscribe(number -> log.info("Even number: {}", number));
     }
 
@@ -91,9 +91,9 @@ public class OperatorTest {
     @Test
     @SneakyThrows
     public void shouldFindNewFilesInPath(){
-        Observable.interval(1, TimeUnit.SECONDS)
+        Observable.interval(1, TimeUnit.SECONDS)//<-- emits one event per sec
                 .flatMapIterable(number -> Arrays.asList(new File("/home/lukasz/tmp").list()))//java 1.0 way...NPE possible here if dir does not exists
-                .distinct()
+                .distinct()//<-- this get only distinct values (huge memory consumption)
                 .subscribe(fileName -> log.info("New file found '{}'", fileName));
 //        TimeUnit.HOURS.sleep(1); //<- uncomment to test it
     }
@@ -121,7 +121,7 @@ public class OperatorTest {
     public void shouldBatchProcessEvent(){
         Observable
                 .fromIterable(NaturalNumbers::new)
-                .buffer(10)// <-- use dome memory
+                .buffer(10)// <-- use some memory
                 .take(3)
                 .subscribe((List<Integer> list) -> log.info("This is whole list of numbers {}", list));
     }
@@ -139,7 +139,7 @@ public class OperatorTest {
         Observable
                 .fromIterable(NaturalNumbers::new)
                 .contains(1492)//<-- this operation is performed on infinite observable!
-                .subscribe(b -> log.info("Contains number {}. BTW. it emits false only after observable termination event either with success or error."));
+                .subscribe(b -> log.info("Contains number {}. BTW. it emits false only after observable termination event either with success or error.", b));
 
     }
 
@@ -242,6 +242,7 @@ public class OperatorTest {
 
     @Test
     public void shouldComputeDelayForKaraoke(){
+        //also emits event with proper delay
         Observable
                 .just(LYRICS)
                 .flatMap(lyrics -> Observable.fromArray(lyrics.split(" ")))

@@ -19,6 +19,7 @@ public class LoggableObserverTest {
 
     @Test
     public void shouldJustCreateObservable(){
+        //like Stream.of()
         Observable
                 .just("Ala", "has", "got", "a", "cat")
                 .subscribe(loggableObserver);
@@ -34,7 +35,7 @@ public class LoggableObserverTest {
 
     @Test
     public void shouldCreateObservableFromFuture(){
-        Future<String> future = new CompleteFuture();
+        Future<String> future = new SampleAlreadyCompleteFuture();//<-- support for future, but support for CompletableFuture is very poor
         Observable
                 .fromFuture(future)
                 .subscribe(loggableObserver);
@@ -42,6 +43,7 @@ public class LoggableObserverTest {
 
     @Test
     public void shouldCreateObservableFromRange(){
+        //IntStream.range(0, 3) <-- like
         Observable
                 .range(0, 3)
                 .subscribe(new LoggableObserver<>());
@@ -51,25 +53,25 @@ public class LoggableObserverTest {
     public void shouldCreateEmptyObservable(){
         Observable
                 .<String>empty()
-                .subscribe(loggableObserver);
+                .subscribe(loggableObserver);//<-- subscription & completion event
     }
 
     @Test
     public void shouldCreateNeverObservable(){
         Observable
                 .<String>never()
-                .subscribe(loggableObserver);
+                .subscribe(loggableObserver);//<-- it get only subscription
     }
 
     @Test
     public void shouldCreateObservableError(){
         Observable
                 .<String>error(new RuntimeException("Catastrophic error"))
-                .subscribe(loggableObserver);
+                .subscribe(loggableObserver);//<-- subscription & error
     }
 }
 
-class CompleteFuture implements Future<String> {
+class SampleAlreadyCompleteFuture implements Future<String> {
 
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {

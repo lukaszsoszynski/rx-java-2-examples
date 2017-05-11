@@ -72,15 +72,15 @@ public class TemperatureServiceTest {
     public void shouldNotReallyCancelSubscription(){
         Disposable subscription = temperatureService
                 .getTemperature(POZNAŃ)
-                .subscribe(t -> log.info("Current temperature {}", t));
-        subscription.dispose();
+                .subscribe(t -> log.info("Current temperature {}", t));//synchronous observable<--
+        subscription.dispose();//<-- cannot dispose subscription in this way in sync observable
     }
 
     @Test
     public void shouldCancelSubscription(){
         temperatureService
                 .getTemperature(POZNAŃ)
-                .subscribe(new BoredObserver());
+                .subscribe(new BoredObserver());//<-- this subscriber will dispose subscription
     }
 
 }
@@ -112,7 +112,7 @@ class TemperatureObserver implements Observer<Double> {
 @Slf4j
 class BoredObserver implements Observer<Double>{
 
-    private Optional<Disposable> disposableOptional;
+    private Optional<Disposable> disposableOptional = Optional.empty();
 
     @Override
     public void onSubscribe(Disposable subscription) {
