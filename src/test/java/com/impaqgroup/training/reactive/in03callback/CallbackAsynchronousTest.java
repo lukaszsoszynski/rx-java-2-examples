@@ -1,4 +1,4 @@
-package com.impaqgroup.training.reactive.in00callback;
+package com.impaqgroup.training.reactive.in03callback;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.impaqgroup.training.reactive.in00callback.model.*;
+import com.impaqgroup.training.reactive.in03callback.model.*;
 
 import lombok.extern.slf4j.Slf4j;
 

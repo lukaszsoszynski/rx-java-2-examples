@@ -1,9 +1,9 @@
-package com.impaqgroup.training.reactive.in00callback.model;
+package com.impaqgroup.training.reactive.in03callback.model;
 
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
-import com.impaqgroup.training.reactive.in00callback.CallbackAsynchronousTest;
+import com.impaqgroup.training.reactive.in03callback.CallbackAsynchronousTest;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

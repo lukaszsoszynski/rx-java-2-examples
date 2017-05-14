@@ -1,4 +1,4 @@
-package com.impaqgroup.training.reactive.in00callback;
+package com.impaqgroup.training.reactive.in03callback;
 
 import static io.reactivex.Single.zip;
 import static io.reactivex.schedulers.Schedulers.io;
@@ -6,7 +6,7 @@ import static io.reactivex.schedulers.Schedulers.io;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.impaqgroup.training.reactive.in00callback.model.*;
+import com.impaqgroup.training.reactive.in03callback.model.*;
 
 import io.reactivex.Single;
 import lombok.extern.slf4j.Slf4j;

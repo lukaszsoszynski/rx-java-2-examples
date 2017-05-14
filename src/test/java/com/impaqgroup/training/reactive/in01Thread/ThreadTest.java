@@ -27,7 +27,7 @@ public class ThreadTest {
 
     @Test
     public void shouldUseThreadPool(){
-        //run with -Xmx64M to see what happen
+        //run with -Xmx64M to see what happen (task queue, infinite size)
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         while (true){
             executorService.submit(()->{

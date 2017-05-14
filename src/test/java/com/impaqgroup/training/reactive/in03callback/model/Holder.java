@@ -1,4 +1,4 @@
-package com.impaqgroup.training.reactive.in00callback.model;
+package com.impaqgroup.training.reactive.in03callback.model;
 
 import lombok.Data;
 

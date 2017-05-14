@@ -1,8 +1,8 @@
-package com.impaqgroup.training.reactive.in00callback.model;
+package com.impaqgroup.training.reactive.in03callback.model;
 
 import java.util.concurrent.TimeUnit;
 
-import com.impaqgroup.training.reactive.in00callback.RxAsynchronousTest;
+import com.impaqgroup.training.reactive.in03callback.RxAsynchronousTest;
 
 import io.reactivex.Single;
 import lombok.extern.slf4j.Slf4j;
