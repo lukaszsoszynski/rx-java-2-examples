@@ -3,6 +3,8 @@ package com.impaqgroup.training.reactive.ex04flatmap;
 import static java.math.BigDecimal.ZERO;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
@@ -52,6 +54,23 @@ public class Ex03FlatMapObservableTest {
 
         BigDecimal totalCost = pricePerSms.reduce(ZERO, BigDecimal::add).blockingGet();
         log.info("Total cost of sending SMSes to all users all phones {}", totalCost);
+    }
+
+    @Test
+    public void flatMapWithOtherTypes(){
+        Observable<BigDecimal> pricePerSms = costService.findUserInDepartment(DEPARTMENT_ID)
+                .flatMapIterable(this::findPhoneNumber) //<-- this method returns List
+                //^ a few additional flatMapXxx methods exists
+                .map(costService::getPricePerSmsForNumber);
+
+        BigDecimal totalCost = pricePerSms.reduce(ZERO, BigDecimal::add).blockingGet();
+        log.info("Total cost of sending SMSes to all users all phones {}", totalCost);
+    }
+
+    private List<PhoneNumber> findPhoneNumber(User user){
+        PhoneNumber phoneNumber1 = new PhoneNumber(user.getId() * 3 + 2, "mobile", String.format("%d", 800000000L + user.getId()));
+        PhoneNumber phoneNumber2 = new PhoneNumber(user.getId() * 3 + 3, "mobile", String.format("%d", 80000000L + user.getId()));
+        return Arrays.asList(phoneNumber1, phoneNumber2);
     }
 
     @Test
