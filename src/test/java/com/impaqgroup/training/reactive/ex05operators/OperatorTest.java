@@ -32,14 +32,14 @@ public class OperatorTest {
         Observable
                 .fromIterable(NaturalNumbers::new)//<-- show NaturalNumbers iterator definition
                 .filter(number -> (number % 2) == 0)
-                .take(10)//<-- move it up and see what happen
+                .take(10)//<-- move it up and see how many numbers will be printed (10?)
                 .subscribe(number -> log.info("Even number: {}", number));
     }
 
     @Test
     public void shouldGetFirstValue(){
         Observable.fromArray(LYRICS.split(" "))
-                .first("Or default value")
+                .first("Or default value")//<-- what type returns method first
                 .subscribe(word -> log.info("First word '{}'", word));
     }
 
@@ -186,7 +186,7 @@ public class OperatorTest {
     public void shouldUseFallbackWhenErrorOccurs(){
         Observable
                 .error(new RuntimeException("Something went wrong!"))
-                .onErrorResumeNext(Observable.just("Subscribe to this observable when error occurs"))
+                .onErrorResumeNext(Observable.just("Subscribe to this observable when error occurs"))//<-- some kind of fallback
                 .subscribe(event -> log.info("Next event {}", event), ex -> log.warn("Error occurred", ex), () -> log.info("Observable completed"));
     }
 

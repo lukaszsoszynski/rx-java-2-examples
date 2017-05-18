@@ -19,11 +19,11 @@ public class SchedulerTest {
 
     @Test
     public void withoutSchedulers(){
-        Observable<Long> observable = createSlowObservable();
+        Observable<Long> observable = createSlowObservable();//<-- explain how slow observable works
 
         Observable<String> slowObservableWithOperations = observable
-                .map(this::slowIdentity)
-                .map(this::slowToString);
+                .map(this::slowIdentity)//<-- explain how slowIdentity works
+                .map(this::slowToString);//<-- explain how slowToString works
 
         //this is blocking, why?
         slowObservableWithOperations.subscribe(value -> log.info("Value from slow observable {}", value));
@@ -86,7 +86,7 @@ public class SchedulerTest {
         connectableObservable.subscribe(value -> log.info("Value from subscriber TWO {}", value));
 
         log.info("Two subscribers added, now let's connect");
-        connectableObservable.connect();
+        connectableObservable.connect();//<-- and what is expected test execution time?
     }
 
     @Test
@@ -227,13 +227,60 @@ public class SchedulerTest {
     }
 
     @Test
-    public void eventsEmittedTooQuickly3FlatMapAndSubscribeOn() {
+    public void eventsEmittedTooQuickly3IdAnyBetterWithFlatMap(){
+        Observable.interval(1, TimeUnit.MILLISECONDS, Schedulers.computation())//<-- emits 1000 event per second
+                .take(5)
+                .observeOn(Schedulers.io()) //<-- scheduler added
+                .flatMap(number -> Observable.just(slowIdentity(number)))
+                .flatMap(number -> Observable.just(slowToString(number)))
+                .subscribe(value -> log.info("How many message per sec will be printed? Is it better?"));
+        sleep(10100);
+    }
+
+    @Test
+    public void eventsEmittedTooQuickly4FlatMapAndSubscribeOn() {
         Observable.interval(1, TimeUnit.MILLISECONDS, Schedulers.computation())//<-- emits 1000 event per second
                 .take(5)
                 .flatMap(value -> Observable.just(value).map(this::slowIdentity).subscribeOn(Schedulers.io()))//<-- flatMap + subscribeOn
                 .flatMap(value -> Observable.just(value).map(this::slowToString).subscribeOn(Schedulers.io()))//<-- flatMap + subscribeOn
+                //^^^ this is declarative concurrency
                 .subscribe(value -> log.info("How many message per sec will be printed? What about order? {}", value));
         sleep(3000);
+    }
+
+    @Test
+    public void withoutConcurrency(){
+        log.info("Test start");
+        Observable.just(1, 2, 3)
+                .flatMap(this::findUserBadDesignMethod)//<-- explain what findUserBadDesignMethod does
+                .subscribe(user -> log.info("How much time does it takes to get all 3 users? '{}'", user));
+        //test execution takes about 9 second
+    }
+
+    @Test
+    public void withBrokenDeclarativeConcurrency(){
+        log.info("Test start");
+        Observable.just(1, 2, 3)
+            .flatMap(id -> findUserBadDesignMethod(id).subscribeOn(Schedulers.io()))//<-- method is executed in main thread
+            //^ on IO scheduler is executed only subscription to observable returned by findUserBadDesignMethod
+            .blockingSubscribe(user -> log.info("Method findUserBadDesignMethod is still executed sequentially in main thread. '{}'", user));
+    }
+
+    @Test
+    public void withCorrectDeclarativeConcurrency(){
+        log.info("Test start");
+        Observable.just(1, 2, 3)
+                .flatMap(id -> Observable.defer(() ->findUserBadDesignMethod(id)).subscribeOn(Schedulers.io()))
+                //^ defer invocation solve the problem, findUserBadDesignMethod is executed on io scheduler in 3 parallel threads
+                .blockingSubscribe(user -> log.info("Method findUserBadDesignMethod executed on IO scheduler. '{}'", user));
+    }
+
+    private Observable<String> findUserBadDesignMethod(long id){
+        log.info("Long findUserBadDesignMethod method started. In which thread method is executed?");
+        //this method simulated slow database query or rest service invocation
+        sleep(3000);//<-- every long operation should be executed in Observable.create in onSubscribe callback.
+        //// Here is not, but it a way to convert legacy API into reactive
+        return Observable.just(String.format("User with id %d", id));
     }
 
 
@@ -262,7 +309,7 @@ public class SchedulerTest {
                 30, TimeUnit.SECONDS,//<-- release thread after 30s if there is not task for it
                 new LinkedBlockingQueue<>(15),//<-- if no thread available submit no more then 15 task in non blocking fashion
                 new ThreadFactoryLoggableWrapper(threadFactory),//<-- log thread creation
-                new ThreadPoolExecutor.CallerRunsPolicy());
+                new ThreadPoolExecutor.CallerRunsPolicy());//<-- sometime it is better to return error
         /*@formatter:on*/
         Scheduler goodScheduler = Schedulers.from(executorService);//here is good scheduler<--
 
