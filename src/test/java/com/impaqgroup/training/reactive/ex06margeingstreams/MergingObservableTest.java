@@ -9,7 +9,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MargeingObservableTest {
+public class MergingObservableTest {
 
     private static final int TIME_PER_LETTER = 50;
     public static final String LYRICS_AEROSMITH = "Yeah, I know nobody knows\n" + "Where it comes and where it goes\n" + "I know it's everybody's sin\n"
@@ -84,6 +84,21 @@ public class MargeingObservableTest {
 
         zipObservable.subscribe(log::info);
         zipObservable.toList().blockingGet();
+    }
+
+    @Test
+    public void shouldZipLatest(){
+        Observable<String> rapid = Observable
+                .interval(333, TimeUnit.MILLISECONDS)
+                .map(number -> String.format("Rapid %d", number));
+
+        Observable<String> slow = Observable
+                .interval(1, TimeUnit.SECONDS)
+                .map(number -> String.format("Slow %d", number));
+
+        rapid.withLatestFrom(slow, (r, s) -> String.format("%s %s", r, s))
+                .take(10)
+                .blockingSubscribe(log::info);
     }
 
     private Observable<String> karaokeObservable(String lyrics){

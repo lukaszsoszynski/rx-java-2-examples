@@ -6,16 +6,16 @@ import io.reactivex.Observable;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Ex01Subscription {
+public class Ex01JustReimplementationTest {
 
     @Test
     public void reimplementObservableJust(){
         //Try to reimplement Observable.just()
-        just("One", "Two", "Three").subscribe(e -> log.info("Observer get event '{}'.", e));
+        myJust("One", "Two", "Three").subscribe(e -> log.info("Observer get event '{}'.", e));
     }
 
     // Very important method
-    private <T> Observable<T> just(T...values){
+    private <T> Observable<T> myJust(T...values){
         //feel free to call create method in RxJava 2
         return Observable.create(emitter -> {
             //this callback runs on each subscription
@@ -32,14 +32,14 @@ public class Ex01Subscription {
 
     @Test
     public void withoutSubscription(){
-        Observable<String> observableWithoutObservers = just("One", "Two");
+        Observable<String> observableWithoutObservers = myJust("One", "Two");
         //pay attention to log, what can you see? Is it lazy?
     }
 
     @Test
     public void observableWithTwoSubscribers(){
         log.info("1) Observable created");
-        Observable<String> observable = just("One", "Two", "Three");
+        Observable<String> observable = myJust("One", "Two", "Three");
 
         log.info("2) First observer subscribe");
         observable.subscribe(event -> log.info("First observer get '{}'", event));
@@ -51,7 +51,7 @@ public class Ex01Subscription {
 
     @Test
     public void subscribeWithoutSubscriber(){
-        Observable<String> observable = just("One", "Two", "Three");
+        Observable<String> observable = myJust("One", "Two", "Three");
         observable.subscribe();
         //how many times OnSubscribe callback was invoked? (find log "On subscriber callback called!")
     }
