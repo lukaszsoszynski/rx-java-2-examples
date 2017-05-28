@@ -70,12 +70,12 @@ public class Ex02HotAndColdTest {
 
     @Test
     public void hotObservable(){
-        ConnectableObservable<String> hotStream = createTemperatureObservable().publish();//PublishSubject created
+        ConnectableObservable<String> hotStream = createTemperatureObservable().publish();//~PublishSubject created
         sleep(600);
 
         LOGGER.info("Before connecting, connection will be established in next line of code");
         hotStream.connect();//<--- most important line
-        LOGGER.info("Client connected to measurement server. We lost some of measurements");
+        LOGGER.info("Client NOT connected to measurement server. We lost some of measurements");
         sleep(250);
 
         LOGGER.info("Let's subscribe to get remaining measurements");
@@ -111,10 +111,10 @@ public class Ex02HotAndColdTest {
     }
 
     @Test
-    public void fastDisconnect(){
+    public void fastDisconnectEventLost(){
         Observable<String> observable = createTemperatureObservable()
                 .publish()
-                .refCount();
+                .refCount();//<--
         sleep(200);
 
         LOGGER.info("Before connecting, connection will be established in next line of code");

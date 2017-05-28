@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.class)
-public class Ex04AmqpSubjectTest {
+public class Ex05AmqpSubjectTest {
 
     private AmqpObserverService amqpObserverService;
 
