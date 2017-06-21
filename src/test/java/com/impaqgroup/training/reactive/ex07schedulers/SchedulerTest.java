@@ -147,7 +147,6 @@ public class SchedulerTest {
         //how many thread can you see
         observableWithTransformations.subscribe(value -> log.info("Subscriber ONE {}", value));
         observableWithTransformations.subscribe(value -> log.info("Subscriber TWO {}", value));
-        sleep(10000);
     }
 
     @Test
@@ -192,7 +191,7 @@ public class SchedulerTest {
                 .subscribeOn(Schedulers.io());//<-- run it on IO scheduler
 
         //what does it print, in which thread?
-        observableWithTransformations.blockingForEach(value -> log.info("Get value in blocking manner."));
+        observableWithTransformations.blockingForEach(value -> log.info("Get value {} in blocking manner.", value));
         //there is plenty of blocking... method
     }
 

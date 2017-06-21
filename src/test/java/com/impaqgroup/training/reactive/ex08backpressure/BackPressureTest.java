@@ -294,7 +294,7 @@ public class BackPressureTest {
     }
 
     @Test
-    public void xustomFlowableWithoutBackpressureSupport(){
+    public void customFlowableWithoutBackpressureSupport(){
         Flowable<Double> flowable = Flowable.create(emitter -> {
             //this flowable emitter do not support backprassure and it cause errors
             for(int i = 0; i < 3; ++i){//always emits 3 event

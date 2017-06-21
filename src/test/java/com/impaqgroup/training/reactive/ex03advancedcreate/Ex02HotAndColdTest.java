@@ -119,6 +119,7 @@ public class Ex02HotAndColdTest {
 
         LOGGER.info("Before connecting, connection will be established in next line of code");
         Disposable firstSubscriber = observable.subscribe(measurement -> LOGGER.info("Client 1: measurement: {}", measurement));
+        sleep(200);
         Disposable secondSubscriber = observable.subscribe(measurement -> LOGGER.info("Client 2: measurement: {}", measurement));
         sleep(150);
 

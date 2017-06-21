@@ -24,7 +24,6 @@ public class MergingObservableTest {
         Observable<String> milliseconds = Observable.just("After", "1", "milliseconds").delay(1, TimeUnit.MILLISECONDS);
         Observable<String> seconds = Observable.just("After", "1", "seconds").delay(1, TimeUnit.SECONDS);
         Observable<String> minutes = Observable.just("After", "1", "minutes").delay(1, TimeUnit.MINUTES);
-
         minutes
                 .ambWith(seconds)
                 .ambWith(milliseconds)
@@ -58,8 +57,7 @@ public class MergingObservableTest {
 
         Observable<String> mergedObservable = Observable.merge(aerosmith, muse, metallica); //<-- all are subscribed simultaneously
 
-        mergedObservable.subscribe(log::info);
-        mergedObservable.toList().blockingGet();
+        mergedObservable.blockingSubscribe(log::info);
     }
 
     @Test
@@ -96,7 +94,10 @@ public class MergingObservableTest {
                 .interval(1, TimeUnit.SECONDS)
                 .map(number -> String.format("Slow %d", number));
 
-        rapid.withLatestFrom(slow, (r, s) -> String.format("%s %s", r, s))
+//        rapid.withLatestFrom(slow, (r, s) -> String.format("%s %s", r, s))
+//                .take(10)
+//                .blockingSubscribe(log::info);
+        slow.withLatestFrom(rapid, (s, r) -> String.format("%s %s", r, s))
                 .take(10)
                 .blockingSubscribe(log::info);
     }
