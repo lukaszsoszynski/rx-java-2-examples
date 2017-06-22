@@ -94,13 +94,27 @@ public class MergingObservableTest {
                 .interval(1, TimeUnit.SECONDS)
                 .map(number -> String.format("Slow %d", number));
 
-//        rapid.withLatestFrom(slow, (r, s) -> String.format("%s %s", r, s))
-//                .take(10)
-//                .blockingSubscribe(log::info);
+        rapid.withLatestFrom(slow, (r, s) -> String.format("%s %s", r, s))
+                .take(10)
+                .blockingSubscribe(log::info);
+
+    }
+
+    @Test
+    public void shouldZipLatestOrderMatters(){
+        Observable<String> rapid = Observable
+                .interval(333, TimeUnit.MILLISECONDS)
+                .map(number -> String.format("Rapid %d", number));
+
+        Observable<String> slow = Observable
+                .interval(1, TimeUnit.SECONDS)
+                .map(number -> String.format("Slow %d", number));
+
         slow.withLatestFrom(rapid, (s, r) -> String.format("%s %s", r, s))
                 .take(10)
                 .blockingSubscribe(log::info);
     }
+
 
     private Observable<String> karaokeObservable(String lyrics){
         return Observable.fromArray(lyrics.split(REGEXP_SPLIT_TEXT))
